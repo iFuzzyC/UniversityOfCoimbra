@@ -51,7 +51,7 @@ void main(int argc, char*argv[]){
     if(rank == 0){
         x_new = alocaVetor(n);
     }
-    while (finished != True){
+    while (!finished){
         //doing the jacobi for the x_rank
         for (i = 0; i < rank_dim; i++){
             diag = rank_dim * rank + i;
