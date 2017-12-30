@@ -4,11 +4,14 @@
 #include <stdlib.h>
 #include "operations.h"
 
-void MatMul(double**A, double**B, double**C, int rows, int cols){
-    int i, j;
-    for(i = 0; i < rows; i++){
-        for(j = 0; j < cols; j++){
-            C[i][j] += A[i][j]*B[j][i];
+void MatMulSqr(double**A, double**B, double**C, int dim){
+    int i, j, k;
+    double sum = 0;
+    for(i = 0; i < dim; i++){
+        for(j = 0; j < dim; j++){
+        	sum = 0;
+        	for(k = 0; k < dim; k++) sum += A[i][k]*B[k][j];
+            C[i][j] += sum;
         }
     }
 }
@@ -77,14 +80,14 @@ void main(int argc, char*argv[]){
                 MPI_Bcast(A[i], N, MPI_DOUBLE, bcast_rank, row_comm);
             }
             //perform multiplication in C matrix
-            MatMul(A, B, C, N, N);
+            MatMulSqr(A, B, C, N);
         }else{
             //receiveis the lines of A
             for(j = 0; j < N; j++){
                 MPI_Bcast(tempA[j], N, MPI_DOUBLE, bcast_rank, row_comm);
             }
             //perform multiplication in C matrix
-            MatMul(tempA, B, C, N, N);
+            MatMulSqr(tempA, B, C, N);
         }
         for(j = 0; j < N; j++){
             MPI_Sendrecv_replace(B[j], N, MPI_DOUBLE, destine, 1, source, 1, col_comm, MPI_STATUS_IGNORE);
@@ -114,8 +117,4 @@ void main(int argc, char*argv[]){
     if(rank == 0){
         printM(fC, n, n);
     }
-
-
-
-
 }
