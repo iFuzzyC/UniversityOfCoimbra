@@ -2,6 +2,6 @@
 
 In this course I was introduced to OpenGL.
 
-# Compile
+### Compile
 
 gcc main.c all-files.c -o main -lGL -lGLU -lglut -lm
